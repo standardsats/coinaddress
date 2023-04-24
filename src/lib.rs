@@ -72,11 +72,12 @@ fn pad_to(v: Vec<u8>, len: usize) -> Vec<u8> {
 }
 
 fn double_sha256(chunk: &[u8]) -> Vec<u8> {
-    let mut hash = Sha256::default();
-    hash.input(chunk);
+    let mut hash = Sha256::new();
+    hash.update(chunk);
+    let result = hash.finalize();
     let mut hash2 = Sha256::default();
-    hash2.input(&hash.result()[..]);
-    hash2.result().into_iter().collect()
+    hash2.update(&result[..]);
+    hash2.finalize().into_iter().collect()
 }
 
 /// Validate provided generic base58 hash.
